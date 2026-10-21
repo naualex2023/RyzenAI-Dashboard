@@ -1,0 +1,6 @@
+Inter-|   Enhanced
+face   rx bytes rx packets 0 0 0 0 0 0 tx bytes tx packets 0 0 0 0 0 0
+lo: 12345 78 0 0 0 0 0 0 12345 78 0 0 0 0 0 0
+wlp2s0: 900000 700 0 0 0 0 0 0 150000 600 0 0 0 0 0 0
+tailscale0: 100000 400 0 0 0 0 0 0 90000 350 0 0 0 0 0 0
+docker0: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0

@@ -1,0 +1,26 @@
+[package]
+name = "ryzenai-dashboard"
+version = "0.1.0"
+edition = "2021"
+description = "Lightweight monitoring web service for AMD Ryzen AI Max+ 395 mini-PCs (Ubuntu)"
+license = "MIT"
+
+[[bin]]
+name = "ryzenai-dashboard"
+path = "src/main.rs"
+
+[dependencies]
+axum = { version = "0.8.9" }
+tokio = { version = "1.53", features = ["rt-multi-thread", "macros", "signal", "sync", "net", "time"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+tokio-stream = { version = "0.1.19", features = ["sync"] }
+bytes = "1"
+libc = "0.2"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+opt-level = 2
+panic = "abort"

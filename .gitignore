@@ -1,0 +1,25 @@
+# ---- Rust / Cargo build artifacts (target/ matches at any depth: server/target/, etc.) ----
+target/
+*.rlib
+
+# ---- Node / frontend build artifacts ----
+node_modules/
+dist/
+.vite/
+
+# ui/dist is committed: server/build.rs embeds it and the target machine
+# must not need node. negations must come after the ignore rules above.
+!ui/dist
+!ui/dist/**
+
+# ---- Logs, temp files, probe dumps ----
+*.log
+*.tmp
+*.out
+/tmp/
+
+# ---- IDE / OS junk ----
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
