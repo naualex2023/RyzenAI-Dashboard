@@ -57,7 +57,9 @@ specific address (e.g. `--bind 127.0.0.1` for localhost-only).
 ### Background run (scripts/start_server.sh)
 
 `scripts/start_server.sh` daemonizes the server so it does not occupy a
-terminal; the binary is built on first run, output goes to `logs/server.log`,
+terminal; the binary is rebuilt automatically whenever sources or the embedded
+UI are newer than the existing binary (so a plain `restart` after `git pull`
+picks up the fresh code), output goes to `logs/server.log`,
 the PID is stored in `logs/ryzenai-dashboard.pid`:
 
 ```sh

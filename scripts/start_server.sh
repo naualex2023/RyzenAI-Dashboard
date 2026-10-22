@@ -31,7 +31,17 @@ alive() {                       # true if a pidfile holds a live process
 pid() { cat "$PID_FILE" 2>/dev/null || true; }
 
 build() {
+  local need=0 newer
   if [[ ! -f "$BIN" ]]; then
+    need=1
+  else
+    # Rebuild when any server source, Cargo manifest, build script, or the
+    # embedded UI dist is newer than the binary (stale-binary protection).
+    newer=$(find "$SERVER_DIR/src" "$SERVER_DIR/Cargo.toml" "$SERVER_DIR/build.rs" \
+             "$ROOT/ui/dist" -newer "$BIN" -print -quit 2>/dev/null || true)
+    [[ -n "$newer" ]] && need=1
+  fi
+  if (( need == 1 )); then
     echo "[build] compiling release binary…"
     (cd "$SERVER_DIR" && cargo build --release)
   fi
