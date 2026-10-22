@@ -46,15 +46,33 @@ cargo build --release                   # pick up the new dist
 ## Run
 
 ```sh
-./target/release/ryzenai-dashboard              # 127.0.0.1:3010, embedded UI
+./target/release/ryzenai-dashboard              # 0.0.0.0:3010, embedded UI
 ```
 
-Then open `http://127.0.0.1:3010`.
+By default the server listens on **all interfaces** (`0.0.0.0`, which includes
+`127.0.0.1`): it is reachable via `http://localhost:3010` locally and via
+`http://<lan-ip>:3010` from other machines. Use `--bind` to restrict to a
+specific address (e.g. `--bind 127.0.0.1` for localhost-only).
+
+### Background run (scripts/start_server.sh)
+
+`scripts/start_server.sh` daemonizes the server so it does not occupy a
+terminal; the binary is built on first run, output goes to `logs/server.log`,
+the PID is stored in `logs/ryzenai-dashboard.pid`:
+
+```sh
+scripts/start_server.sh                 # start (build if needed) + free the terminal
+scripts/start_server.sh status          # pid / port / last log lines
+scripts/start_server.sh stop            # graceful SIGTERM, SIGKILL after grace
+scripts/start_server.sh restart
+scripts/start_server.sh log             # tail -f logs/server.log (Ctrl-C exits)
+scripts/start_server.sh -- --port 8080 --token secret   # args after "--" go to the binary
+```
 
 ### Options
 
 ```
---bind <addr>         listen address (default: 127.0.0.1)
+--bind <addr>         listen address (default: 0.0.0.0 — all interfaces, includes 127.0.0.1)
 --port <n>            TCP port (default: 3010)
 --interval <ms>       collection interval (default: 2000)
 --history <ticks>     ring buffer length per series (default: 900)

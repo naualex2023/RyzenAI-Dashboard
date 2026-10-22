@@ -17,7 +17,7 @@ pub struct Config {
 const USAGE: &str = "Usage: ryzenai-dashboard [options]
 
 Options:
-  --bind <addr>         listen address (default: 127.0.0.1)
+  --bind <addr>         listen address (default: 0.0.0.0 — all interfaces, includes 127.0.0.1)
   --port <n>            TCP port (default: 3010)
   --interval <ms>       collection interval (default: 2000)
   --history <ticks>     ring buffer length per series (default: 900)
@@ -31,7 +31,7 @@ Options:
 
 pub fn parse() -> Config {
     let mut c = Config {
-        bind_addr: "127.0.0.1".into(),
+        bind_addr: "0.0.0.0".into(),
         port: 3010,
         interval_ms: 2000,
         history_ticks: 900,

@@ -34,8 +34,16 @@ fn main() {
                 std::process::exit(1);
             }
         };
+        let shown = if cfg.bind_addr == "0.0.0.0" {
+            format!(
+                "http://0.0.0.0:{0}  (all interfaces: http://localhost:{0}, http://<lan-ip>:{0})",
+                cfg.port
+            )
+        } else {
+            format!("http://{addr}")
+        };
         println!(
-            "ryzenai-dashboard v{}: listening on http://{addr} (ui: {})",
+            "ryzenai-dashboard v{}: listening on {shown} (ui: {})",
             env!("CARGO_PKG_VERSION"),
             if cfg.static_dir.is_some() {
                 "filesystem dir".to_string()
