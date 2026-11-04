@@ -94,8 +94,20 @@ printf 'acpitz 0\n' > "$F/sys/class/thermal/thermal_zone0/type"
 printf '40000\n' > "$F/sys/class/thermal/thermal_zone1/temp"
 printf 'soc_thermal\n' > "$F/sys/class/thermal/thermal_zone1/type"
 
-# ----- /sys/class/drm (AMD card1, no perf/VRAM accounting) -----
+# ----- /sys/class/drm (AMD card1, full amdgpu accounting) -----
 printf '0x1002 0x13f6\n' > "$F/sys/class/drm/card1/device/vendor"
+printf '37\n' > "$F/sys/class/drm/card1/device/gpu_busy_percent"
+printf '12\n' > "$F/sys/class/drm/card1/device/mem_busy_percent"
+printf '1073741824\n'  > "$F/sys/class/drm/card1/device/mem_info_vram_used"
+printf '5368709120\n'  > "$F/sys/class/drm/card1/device/mem_info_vram_total"
+printf '1073741824\n'  > "$F/sys/class/drm/card1/device/mem_info_vis_vram_used"
+printf '5368709120\n'  > "$F/sys/class/drm/card1/device/mem_info_vis_vram_total"
+printf '2147483648\n'  > "$F/sys/class/drm/card1/device/mem_info_gtt_used"
+printf '8589934592\n'  > "$F/sys/class/drm/card1/device/mem_info_gtt_total"
+printf '0: 200Mhz\n1: 1200Mhz *\n' > "$F/sys/class/drm/card1/device/pp_dpm_sclk"
+printf '0: 640Mhz *\n' > "$F/sys/class/drm/card1/device/pp_dpm_mclk"
+printf 'performance\n' > "$F/sys/class/drm/card1/device/power_dpm_state"
+printf 'auto\n' > "$F/sys/class/drm/card1/device/power_dpm_force_performance_level"
 
 # ----- /sys/class/block -----
 printf '0\n' > "$F/sys/class/block/nvme0n1/queue/rotational"

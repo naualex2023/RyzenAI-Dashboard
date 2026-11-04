@@ -10,7 +10,7 @@ embedded React UI from one process.
 - **CPU** — aggregate + per-core usage, per-core frequency, Tctl-class temp, load average, PSI
 - **Memory** — used/available/cached/buffers/swap, memory PSI
 - **Disks** — whole-device + partitions (nvme suffix-aware matching), per-filesystem usage via `statvfs`, SMART-style temps from hwmon, optional `--smartctl` probing
-- **GPU / NPU** — AMD DRM busy %, VRAM, power, temps (`/sys/class/drm`); accelerator probes (`accel`)
+- **GPU / NPU** — AMD GPU busy % + memory-controller busy %, VRAM/GTT accounting, current sclk/mclk (pp_dpm), DPM state & performance level, fan RPM, power, temps; NPU clocks/power (`accel`)
 - **Temps** — unified sensor grid with role classification (cpu / gpu / ssd / vrm / soc / chipset / ambient / misc), deduped across hwmon + thermal zones
 - **Network** — per-interface rx/tx rates + packet rates, link speed, operstate
 - **Processes** — top by CPU % and RSS (per-pid `/proc/[pid]` deltas)

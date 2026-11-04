@@ -75,8 +75,18 @@ export interface DiskInfo {
 export interface GpuInfo {
   card: string;
   busy_pct: number | null;
+  mem_busy_pct: number | null;
   vram_used_b: number | null;
   vram_total_b: number | null;
+  vis_vram_used_b: number | null;
+  vis_vram_total_b: number | null;
+  gtt_used_b: number | null;
+  gtt_total_b: number | null;
+  sclk_mhz: number | null;
+  mclk_mhz: number | null;
+  dpm_state: string | null;
+  perf_level: string | null;
+  fan_rpm: number | null;
   power_w: number | null;
   temps: DiskTemp[];
 }
