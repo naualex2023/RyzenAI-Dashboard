@@ -153,7 +153,7 @@ async fn fallback_static(State(app): State<Arc<App>>, req: Request) -> Response 
     }
     if let Some(dir) = &app.cfg.static_dir {
         if let Ok(b) = std::fs::read(dir.join(&rel)) {
-            return file_resp(b, mime_for(&rel));
+            return file_resp(b, mime_for(&rel), cache_for(&rel));
         }
     }
     embedded(&rel)
@@ -162,7 +162,7 @@ async fn fallback_static(State(app): State<Arc<App>>, req: Request) -> Response 
 fn index_resp(app: &App) -> Response {
     if let Some(dir) = &app.cfg.static_dir {
         if let Ok(b) = std::fs::read(dir.join("index.html")) {
-            return file_resp(b, mime_for("index.html"));
+            return file_resp(b, mime_for("index.html"), cache_for("index.html"));
         }
     }
     embedded("index.html")
@@ -171,21 +171,36 @@ fn index_resp(app: &App) -> Response {
 fn embedded(rel: &str) -> Response {
     use crate::ui_assets::ASSETS;
     if let Some(a) = ASSETS.iter().find(|a| a.path == rel) {
-        return file_resp(a.bytes.to_vec(), a.mime);
+        return file_resp(a.bytes.to_vec(), a.mime, cache_for(a.path));
     }
     // SPA fallback: unknown paths get the single-page app entry point.
     if let Some(a) = ASSETS.iter().find(|a| a.path == "index.html") {
-        return file_resp(a.bytes.to_vec(), a.mime);
+        return file_resp(a.bytes.to_vec(), a.mime, cache_for("index.html"));
     }
     (StatusCode::NOT_FOUND, "not found").into_response()
 }
 
-fn file_resp(bytes: Vec<u8>, mime: &str) -> Response {
+fn file_resp(bytes: Vec<u8>, mime: &str, cache: &str) -> Response {
     Response::builder()
         .status(StatusCode::OK)
         .header("content-type", mime)
+        .header("cache-control", cache)
         .body(axum::body::Body::from(bytes))
         .unwrap_or_else(|_| (StatusCode::INTERNAL_SERVER_ERROR, "body").into_response())
+}
+
+/// Caching policy that keeps a redeploy from being masked by stale browser
+/// caches. Content-hashed assets (`/assets/index-<hash>.js`) are immutable and
+/// safe to cache forever; the HTML entry point (and SPA fallback) must always
+/// be revalidated so clients pick up the new hashed bundle after a rebuild —
+/// otherwise a cached `index.html` keeps requesting an old asset hash that no
+/// longer exists and silently renders a stale/partial UI.
+fn cache_for(rel: &str) -> &'static str {
+    if rel.starts_with("assets/") {
+        "public, max-age=31536000, immutable"
+    } else {
+        "no-cache"
+    }
 }
 
 fn mime_for(rel: &str) -> &'static str {
